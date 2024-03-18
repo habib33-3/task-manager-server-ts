@@ -1,13 +1,6 @@
-import express, { Request, Response } from "express";
+import { connectDB } from "./config/db.config";
 
-const app = express();
-
-const port = 5000;
-
-app.get("/", (req: Request, res: Response) => {
-    res.send({ message: "server running" });
-});
-
-app.listen(port, () => {
-    console.log(`server started at ${port}`);
+connectDB().catch((err) => {
+    console.error("Error starting express server:", err);
+    process.exit(1);
 });
