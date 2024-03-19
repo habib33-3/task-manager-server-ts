@@ -3,6 +3,6 @@ import { Router } from "express";
 
 const taskRouter: Router = Router();
 
-taskRouter.post("/task", addTask);
+taskRouter.post("/tasks", addTask);
 
 export default taskRouter;

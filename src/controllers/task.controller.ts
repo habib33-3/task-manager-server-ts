@@ -9,7 +9,7 @@ const addTask = async (req: Request, res: Response) => {
 
         res.status(201).json({
             message: "Task added",
-            success: false,
+            success: true,
             result,
         });
     } catch (error) {
