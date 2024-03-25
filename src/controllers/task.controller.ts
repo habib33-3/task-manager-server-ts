@@ -1,6 +1,5 @@
 import Task from "@/models/task.model";
 import { Response, Request } from "express";
-import { ObjectId } from "mongoose";
 
 const addTask = async (req: Request, res: Response) => {
     try {
@@ -40,27 +39,57 @@ const getTasks = async (req: Request, res: Response) => {
     }
 };
 
+const deleteTask = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
 
-const deleteTask=async (req:Request,res:Response)=>{
-try {
-    const {id}=req.params
+        const result = await Task.findByIdAndDelete(id);
 
-    const result=Task.findByIdAndDelete(id)
-
-    if(result!==null){
-        res.status(200).json({
-            message:"Task deleted",
-            success:true
-        })
-    }
-} catch (error) {
-    console.log("error during delete task", error);
+        if (result) {
+            res.status(200).json({
+                message: "Task deleted",
+                success: true,
+            });
+        } else {
+            res.status(404).json({
+                message: "Task not found",
+                success: false,
+            });
+        }
+    } catch (error) {
+        console.error("Error during delete task", error);
         res.status(500).json({
-            message: "error during delete task",
+            message: "Error during delete task",
             success: false,
         });
     }
-}
-}
+};
 
-export { addTask, getTasks };
+const updateTask = async (req: Request, res: Response) => {
+    try {
+        const taskId = req.params.id;
+        const updates = req.body;
+
+        const updatedTask = await Task.findByIdAndUpdate(
+            taskId,
+            { $set: updates },
+            { new: true }
+        );
+
+        if (!updatedTask) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+
+        res.status(200).json({
+            message: "Task deleted",
+            success: true,
+        });
+    } catch (error) {
+        console.error("Error during delete task", error);
+        res.status(500).json({
+            message: "Error during delete task",
+            success: false,
+        });
+    }
+};
+export { addTask, getTasks, updateTask, deleteTask };
